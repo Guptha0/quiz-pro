@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster Pro - Advanced Quiz Platform</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            margin: 20px 0;
+            min-height: 70vh;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .content-area {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            min-height: 500px;
+        }
+        
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .quiz-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .category-card {
+            background-color: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        /* Quiz Styles */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timer {
+            background-color: var(--warning);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .timer.warning {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .question-container {
+            margin-bottom: 2rem;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .options-container {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option {
+            background-color: var(--light);
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .option.selected {
+            background-color: rgba(67, 97, 238, 0.2);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .progress-container {
+            margin: 1rem 0;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Leaderboard Styles */
+        .leaderboard-tabs {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .leaderboard-list {
+            list-style: none;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .rank {
+            font-size: 1.5rem;
+            font-weight: 700;
+            width: 50px;
+            text-align: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+        
+        .score {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Profile Styles */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-right: 2rem;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-stat {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 8px;
+        }
+        
+        .profile-stat h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* Results Styles */
+        .results-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .results-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+        
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .result-stat {
+            background-color: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background-color: var(--success);
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            transform: translateX(150%);
+            transition: transform 0.3s;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background-color: var(--warning);
+        }
+        
+        /* Ads Styles */
+        .ad-container {
+            background-color: #e9ecef;
+            border: 1px dashed var(--gray);
+            padding: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul li a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .stats-cards, .quiz-categories, .profile-stats, .results-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin: 1rem 0;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .user-actions {
+                margin-top: 1rem;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i> QuizMaster Pro
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-view="dashboard">Home</a></li>
+                        <li><a href="#" class="nav-link" data-view="categories">Categories</a></li>
+                        <li><a href="#" class="nav-link" data-view="leaderboard">Leaderboard</a></li>
+                        <li><a href="#" class="nav-link" data-view="profile">Profile</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <button class="btn btn-primary" id="loginBtn">Login</button>
+                    <button class="btn btn-outline" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="sidebar-link active" data-view="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" class="sidebar-link" data-view="quiz"><i class="fas fa-play-circle"></i> Start Quiz</a></li>
+                    <li><a href="#" class="sidebar-link" data-view="leaderboard"><i class="fas fa-trophy"></i> Leaderboards</a></li>
+                    <li><a href="#" class="sidebar-link" data-view="profile"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#" class="sidebar-link" data-view="categories"><i class="fas fa-list"></i> Categories</a></li>
+                </ul>
+                
+                <!-- Ad Container -->
+                <div class="ad-container">
+                    <p>Advertisement</p>
+                    <p>Upgrade to Premium to remove ads</p>
+                    <button class="btn btn-primary">Upgrade Now</button>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <!-- Dashboard View -->
+                <div id="dashboard" class="view active">
+                    <div class="dashboard-header">
+                        <h1>Welcome to QuizMaster Pro!</h1>
+                        <button class="btn btn-primary" id="startQuizBtn">Start New Quiz</button>
+                    </div>
+                    
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <h3 id="totalPoints">0</h3>
+                            <p>Total Points</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="quizzesCompleted">0</h3>
+                            <p>Quizzes Completed</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="currentStreak">0</h3>
+                            <p>Current Streak</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="globalRank">#---</h3>
+                            <p>Global Rank</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Popular Quiz Categories</h2>
+                    <div class="quiz-categories">
+                        <div class="category-card" data-category="geography">
+                            <i class="fas fa-globe-americas"></i>
+                            <h3>Geography</h3>
+                            <p>Test your knowledge of countries, capitals, and landmarks</p>
+                        </div>
+                        <div class="category-card" data-category="science">
+                            <i class="fas fa-flask"></i>
+                            <h3>Science</h3>
+                            <p>Explore biology, chemistry, physics, and more</p>
+                        </div>
+                        <div class="category-card" data-category="history">
+                            <i class="fas fa-history"></i>
+                            <h3>History</h3>
+                            <p>Journey through important historical events</p>
+                        </div>
+                        <div class="category-card" data-category="entertainment">
+                            <i class="fas fa-film"></i>
+                            <h3>Entertainment</h3>
+                            <p>Movies, music, TV shows, and pop culture</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz View -->
+                <div id="quiz" class="view">
+                    <div class="quiz-container">
+                        <div class="quiz-header">
+                            <h2 id="quizCategory">General Knowledge Quiz</h2>
+                            <div class="timer" id="quizTimer">05:00</div>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress" id="quizProgress"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <span>Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <div class="question-text" id="questionText">
+                                Loading question...
+                            </div>
+                            <div class="options-container" id="optionsContainer">
+                                <!-- Options will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="quiz-controls">
+                            <button class="btn" id="prevQuestionBtn" disabled>Previous</button>
+                            <button class="btn btn-primary" id="nextQuestionBtn">Next Question</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results View -->
+                <div id="results" class="view">
+                    <div class="results-container">
+                        <h2>Quiz Completed!</h2>
+                        <div class="results-score" id="finalScore">0/10</div>
+                        <p id="resultsMessage">Thanks for taking the quiz!</p>
+                        
+                        <div class="results-stats">
+                            <div class="result-stat">
+                                <h3 id="correctAnswers">0</h3>
+                                <p>Correct Answers</p>
+                            </div>
+                            <div class="result-stat">
+                                <h3 id="timeSpent">0:00</h3>
+                                <p>Time Spent</p>
+                            </div>
+                            <div class="result-stat">
+                                <h3 id="pointsEarned">0</h3>
+                                <p>Points Earned</p>
+                            </div>
+                            <div class="result-stat">
+                                <h3 id="accuracy">0%</h3>
+                                <p>Accuracy</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem;">
+                            <button class="btn btn-primary" id="reviewQuizBtn">Review Answers</button>
+                            <button class="btn" id="newQuizBtn" style="margin-left: 10px;">Start New Quiz</button>
+                            <button class="btn" id="backToDashboardBtn" style="margin-left: 10px;">Back to Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard View -->
+                <div id="leaderboard" class="view">
+                    <h2>Leaderboard</h2>
+                    <div class="leaderboard-tabs">
+                        <div class="tab active" data-tab="global">Global</div>
+                        <div class="tab" data-tab="friends">Friends</div>
+                        <div class="tab" data-tab="weekly">This Week</div>
+                    </div>
+                    
+                    <ul class="leaderboard-list" id="leaderboardList">
+                        <!-- Leaderboard items will be populated by JavaScript -->
+                    </ul>
+                </div>
+
+                <!-- Profile View -->
+                <div id="profile" class="view">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">Q</div>
+                        <div>
+                            <h1 id="profileUsername">Quiz Master</h1>
+                            <p>Member since <span id="memberSince">2023</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <h3 id="profileQuizzes">0</h3>
+                            <p>Quizzes Completed</p>
+                        </div>
+                        <div class="profile-stat">
+                            <h3 id="profileAccuracy">0%</h3>
+                            <p>Average Accuracy</p>
+                        </div>
+                        <div class="profile-stat">
+                            <h3 id="profilePoints">0</h3>
+                            <p>Total Points</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Recent Activity</h2>
+                    <div id="recentActivity">
+                        <p>No recent activity yet. Complete a quiz to see your progress here!</p>
+                    </div>
+                </div>
+
+                <!-- Categories View -->
+                <div id="categories" class="view">
+                    <h2>Quiz Categories</h2>
+                    <div class="quiz-categories" id="categoriesList">
+                        <!-- Categories will be populated by JavaScript -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>QuizMaster Pro</h3>
+                    <p>The ultimate quiz platform for testing your knowledge and challenging friends.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" class="footer-link" data-view="dashboard">Home</a></li>
+                        <li><a href="#" class="footer-link" data-view="categories">Categories</a></li>
+                        <li><a href="#" class="footer-link" data-view="leaderboard">Leaderboard</a></li>
+                        <li><a href="#" class="footer-link" data-view="profile">Profile</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 QuizMaster Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to QuizMaster Pro</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create an Account</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        const appState = {
+            currentView: 'dashboard',
+            user: null,
+            quiz: {
+                active: false,
+                category: 'general',
+                questions: [],
+                currentQuestionIndex: 0,
+                userAnswers: [],
+                startTime: null,
+                timer: null,
+                timeLimit: 300 // 5 minutes in seconds
+            },
+            userStats: {
+                totalPoints: 0,
+                quizzesCompleted: 0,
+                currentStreak: 0,
+                globalRank: '---'
+            }
+        };
+
+        // DOM Elements
+        const elements = {
+            // Views
+            views: document.querySelectorAll('.view'),
+            
+            // Navigation
+            navLinks: document.querySelectorAll('.nav-link'),
+            sidebarLinks: document.querySelectorAll('.sidebar-link'),
+            footerLinks: document.querySelectorAll('.footer-link'),
+            
+            // Modals
+            loginBtn: document.getElementById('loginBtn'),
+            signupBtn: document.getElementById('signupBtn'),
+            loginModal: document.getElementById('loginModal'),
+            signupModal: document.getElementById('signupModal'),
+            closeModals: document.querySelectorAll('.close-modal'),
+            showSignup: document.getElementById('showSignup'),
+            showLogin: document.getElementById('showLogin'),
+            
+            // Dashboard
+            startQuizBtn: document.getElementById('startQuizBtn'),
+            totalPoints: document.getElementById('totalPoints'),
+            quizzesCompleted: document.getElementById('quizzesCompleted'),
+            currentStreak: document.getElementById('currentStreak'),
+            globalRank: document.getElementById('globalRank'),
+            categoryCards: document.querySelectorAll('.category-card'),
+            
+            // Quiz
+            quizCategory: document.getElementById('quizCategory'),
+            quizTimer: document.getElementById('quizTimer'),
+            quizProgress: document.getElementById('quizProgress'),
+            currentQuestion: document.getElementById('currentQuestion'),
+            totalQuestions: document.getElementById('totalQuestions'),
+            progressPercent: document.getElementById('progressPercent'),
+            questionText: document.getElementById('questionText'),
+            optionsContainer: document.getElementById('optionsContainer'),
+            prevQuestionBtn: document.getElementById('prevQuestionBtn'),
+            nextQuestionBtn: document.getElementById('nextQuestionBtn'),
+            
+            // Results
+            finalScore: document.getElementById('finalScore'),
+            resultsMessage: document.getElementById('resultsMessage'),
+            correctAnswers: document.getElementById('correctAnswers'),
+            timeSpent: document.getElementById('timeSpent'),
+            pointsEarned: document.getElementById('pointsEarned'),
+            accuracy: document.getElementById('accuracy'),
+            reviewQuizBtn: document.getElementById('reviewQuizBtn'),
+            newQuizBtn: document.getElementById('newQuizBtn'),
+            backToDashboardBtn: document.getElementById('backToDashboardBtn'),
+            
+            // Profile
+            profileAvatar: document.getElementById('profileAvatar'),
+            profileUsername: document.getElementById('profileUsername'),
+            memberSince: document.getElementById('memberSince'),
+            profileQuizzes: document.getElementById('profileQuizzes'),
+            profileAccuracy: document.getElementById('profileAccuracy'),
+            profilePoints: document.getElementById('profilePoints'),
+            recentActivity: document.getElementById('recentActivity'),
+            
+            // Leaderboard
+            leaderboardTabs: document.querySelectorAll('.tab'),
+            leaderboardList: document.getElementById('leaderboardList'),
+            
+            // Categories
+            categoriesList: document.getElementById('categoriesList'),
+            
+            // Notification
+            notification: document.getElementById('notification')
+        };
+
+        // Quiz Data
+        const quizData = {
+            general: [
+                {
+                    question: "What is the capital of France?",
+                    options: ["London", "Berlin", "Paris", "Madrid"],
+                    correctAnswer: 2
+                },
+                {
+                    question: "Which planet is known as the Red Planet?",
+                    options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                    correctAnswer: 1
+                },
+                {
+                    question: "What is the largest mammal in the world?",
+                    options: ["Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Who painted the Mona Lisa?",
+                    options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+                    correctAnswer: 2
+                },
+                {
+                    question: "What is the chemical symbol for gold?",
+                    options: ["Go", "Gd", "Au", "Ag"],
+                    correctAnswer: 2
+                }
+            ],
+            geography: [
+                {
+                    question: "What is the longest river in the world?",
+                    options: ["Amazon", "Nile", "Yangtze", "Mississippi"],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Which country has the most natural lakes?",
+                    options: ["Canada", "Russia", "USA", "China"],
+                    correctAnswer: 0
+                }
+            ],
+            science: [
+                {
+                    question: "What is the atomic number of oxygen?",
+                    options: ["8", "16", "32", "64"],
+                    correctAnswer: 0
+                },
+                {
+                    question: "What is the speed of light in a vacuum?",
+                    options: ["299,792 km/s", "150,000 km/s", "450,000 km/s", "1,000,000 km/s"],
+                    correctAnswer: 0
+                }
+            ]
+        };
+
+        // Initialize the application
+        function init() {
+            setupEventListeners();
+            updateUserStats();
+            showNotification('Welcome to QuizMaster Pro!', 'success');
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Navigation
+            elements.navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchView(link.getAttribute('data-view'));
+                });
+            });
+            
+            elements.sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchView(link.getAttribute('data-view'));
+                });
+            });
+            
+            elements.footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchView(link.getAttribute('data-view'));
+                });
+            });
+            
+            // Modal controls
+            elements.loginBtn.addEventListener('click', () => {
+                elements.loginModal.style.display = 'flex';
+            });
+            
+            elements.signupBtn.addEventListener('click', () => {
+                elements.signupModal.style.display = 'flex';
+            });
+            
+            elements.closeModals.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    elements.loginModal.style.display = 'none';
+                    elements.signupModal.style.display = 'none';
+                });
+            });
+            
+            elements.showSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                elements.loginModal.style.display = 'none';
+                elements.signupModal.style.display = 'flex';
+            });
+            
+            elements.showLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                elements.signupModal.style.display = 'none';
+                elements.loginModal.style.display = 'flex';
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === elements.loginModal) {
+                    elements.loginModal.style.display = 'none';
+                }
+                if (e.target === elements.signupModal) {
+                    elements.signupModal.style.display = 'none';
+                }
+            });
+            
+            // Form submissions
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('signupForm').addEventListener('submit', handleSignup);
+            
+            // Quiz controls
+            elements.startQuizBtn.addEventListener('click', () => {
+                startQuiz('general');
+            });
+            
+            elements.categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.getAttribute('data-category');
+                    startQuiz(category);
+                });
+            });
+            
+            elements.prevQuestionBtn.addEventListener('click', goToPreviousQuestion);
+            elements.nextQuestionBtn.addEventListener('click', goToNextQuestion);
+            
+            // Results controls
+            elements.reviewQuizBtn.addEventListener('click', reviewQuiz);
+            elements.newQuizBtn.addEventListener('click', () => {
+                startQuiz(appState.quiz.category);
+            });
+            elements.backToDashboardBtn.addEventListener('click', () => {
+                switchView('dashboard');
+            });
+            
+            // Leaderboard tabs
+            elements.leaderboardTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    elements.leaderboardTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    loadLeaderboard(tab.getAttribute('data-tab'));
+                });
+            });
+        }
+
+        // Switch between views
+        function switchView(viewName) {
+            // Update active states
+            elements.navLinks.forEach(link => link.classList.remove('active'));
+            elements.sidebarLinks.forEach(link => link.classList.remove('active'));
+            
+            // Activate current view link
+            document.querySelectorAll(`[data-view="${viewName}"]`).forEach(link => {
+                link.classList.add('active');
+            });
+            
+            // Hide all views
+            elements.views.forEach(view => view.classList.remove('active'));
+            
+            // Show selected view
+            const targetView = document.getElementById(viewName);
+            if (targetView) {
+                targetView.classList.add('active');
+                appState.currentView = viewName;
+                
+                // Load view-specific content
+                switch(viewName) {
+                    case 'leaderboard':
+                        loadLeaderboard('global');
+                        break;
+                    case 'profile':
+                        loadProfile();
+                        break;
+                    case 'categories':
+                        loadCategories();
+                        break;
+                }
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            elements.notification.textContent = message;
+            elements.notification.className = 'notification';
+            elements.notification.classList.add(type === 'error' ? 'error' : 'success');
+            elements.notification.classList.add('show');
+            
+            setTimeout(() => {
+                elements.notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Simulate login
+            appState.user = {
+                username: email.split('@')[0],
+                email: email,
+                memberSince: new Date().getFullYear()
+            };
+            
+            elements.loginModal.style.display = 'none';
+            showNotification('Login successful!');
+            
+            // Update UI for logged in user
+            elements.loginBtn.textContent = 'Logout';
+            elements.signupBtn.style.display = 'none';
+            
+            // Update event listener for logout
+            elements.loginBtn.removeEventListener('click', () => {});
+            elements.loginBtn.addEventListener('click', handleLogout);
+            
+            // Update user stats
+            updateUserStats();
+        }
+
+        // Handle logout
+        function handleLogout() {
+            appState.user = null;
+            elements.loginBtn.textContent = 'Login';
+            elements.signupBtn.style.display = 'inline-block';
+            showNotification('Logged out successfully');
+            
+            // Reset event listener for login
+            elements.loginBtn.removeEventListener('click', handleLogout);
+            elements.loginBtn.addEventListener('click', () => {
+                elements.loginModal.style.display = 'flex';
+            });
+            
+            // Update user stats
+            updateUserStats();
+        }
+
+        // Handle signup
+        function handleSignup(e) {
+            e.preventDefault();
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            // Simple validation
+            if (!username || !email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            // Simulate signup
+            appState.user = {
+                username: username,
+                email: email,
+                memberSince: new Date().getFullYear()
+            };
+            
+            elements.signupModal.style.display = 'none';
+            showNotification('Account created successfully!');
+            
+            // Update UI for logged in user
+            elements.loginBtn.textContent = 'Logout';
+            elements.signupBtn.style.display = 'none';
+            
+            // Update event listener for logout
+            elements.loginBtn.removeEventListener('click', () => {});
+            elements.loginBtn.addEventListener('click', handleLogout);
+            
+            // Update user stats
+            updateUserStats();
+        }
+
+        // Start a new quiz
+        function startQuiz(category) {
+            // Reset quiz state
+            appState.quiz = {
+                active: true,
+                category: category,
+                questions: [...quizData[category] || quizData.general],
+                currentQuestionIndex: 0,
+                userAnswers: [],
+                startTime: new Date(),
+                timer: null,
+                timeLimit: 300
+            };
+            
+            // If we don't have enough questions, duplicate some to reach 10
+            while (appState.quiz.questions.length < 10) {
+                appState.quiz.questions.push(...appState.quiz.questions);
+            }
+            appState.quiz.questions = appState.quiz.questions.slice(0, 10);
+            
+            // Update UI
+            elements.quizCategory.textContent = `${category.charAt(0).toUpperCase() + category.slice(1)} Quiz`;
+            elements.totalQuestions.textContent = appState.quiz.questions.length;
+            
+            // Start timer
+            startQuizTimer();
+            
+            // Load first question
+            loadQuestion(0);
+            
+            // Switch to quiz view
+            switchView('quiz');
+        }
+
+        // Start the quiz timer
+        function startQuizTimer() {
+            clearInterval(appState.quiz.timer);
+            
+            appState.quiz.timer = setInterval(() => {
+                const elapsed = Math.floor((new Date() - appState.quiz.startTime) / 1000);
+                const remaining = appState.quiz.timeLimit - elapsed;
+                
+                if (remaining <= 0) {
+                    endQuiz();
+                    return;
+                }
+                
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                elements.quizTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Add warning class when time is running low
+                if (remaining <= 60) {
+                    elements.quizTimer.classList.add('warning');
+                }
+            }, 1000);
+        }
+
+        // Load a specific question
+        function loadQuestion(index) {
+            if (index < 0 || index >= appState.quiz.questions.length) return;
+            
+            appState.quiz.currentQuestionIndex = index;
+            const question = appState.quiz.questions[index];
+            
+            // Update question text
+            elements.questionText.textContent = question.question;
+            
+            // Update question counter
+            elements.currentQuestion.textContent = index + 1;
+            
+            // Update progress
+            const progress = ((index + 1) / appState.quiz.questions.length) * 100;
+            elements.quizProgress.style.width = `${progress}%`;
+            elements.progressPercent.textContent = `${Math.round(progress)}%`;
+            
+            // Clear options container
+            elements.optionsContainer.innerHTML = '';
+            
+            // Add options
+            question.options.forEach((option, i) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (appState.quiz.userAnswers[index] === i) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectAnswer(i));
+                elements.optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            elements.prevQuestionBtn.disabled = index === 0;
+            elements.nextQuestionBtn.textContent = index === appState.quiz.questions.length - 1 ? 'Finish Quiz' : 'Next Question';
+        }
+
+        // Select an answer
+        function selectAnswer(answerIndex) {
+            const currentIndex = appState.quiz.currentQuestionIndex;
+            appState.quiz.userAnswers[currentIndex] = answerIndex;
+            
+            // Update UI
+            const options = elements.optionsContainer.querySelectorAll('.option');
+            options.forEach((option, i) => {
+                option.classList.toggle('selected', i === answerIndex);
+            });
+        }
+
+        // Go to previous question
+        function goToPreviousQuestion() {
+            if (appState.quiz.currentQuestionIndex > 0) {
+                loadQuestion(appState.quiz.currentQuestionIndex - 1);
+            }
+        }
+
+        // Go to next question
+        function goToNextQuestion() {
+            if (appState.quiz.currentQuestionIndex < appState.quiz.questions.length - 1) {
+                loadQuestion(appState.quiz.currentQuestionIndex + 1);
+            } else {
+                endQuiz();
+            }
+        }
+
+        // End the quiz and show results
+        function endQuiz() {
+            clearInterval(appState.quiz.timer);
+            appState.quiz.active = false;
+            
+            // Calculate results
+            let correctCount = 0;
+            appState.quiz.questions.forEach((question, index) => {
+                if (appState.quiz.userAnswers[index] === question.correctAnswer) {
+                    correctCount++;
+                }
+            });
+            
+            const accuracy = (correctCount / appState.quiz.questions.length) * 100;
+            const timeSpent = Math.floor((new Date() - appState.quiz.startTime) / 1000);
+            const points = Math.round(correctCount * 10 * (accuracy / 100));
+            
+            // Update results view
+            elements.finalScore.textContent = `${correctCount}/${appState.quiz.questions.length}`;
+            elements.correctAnswers.textContent = correctCount;
+            elements.timeSpent.textContent = `${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}`;
+            elements.pointsEarned.textContent = points;
+            elements.accuracy.textContent = `${Math.round(accuracy)}%`;
+            
+            // Set results message
+            if (accuracy >= 80) {
+                elements.resultsMessage.textContent = 'Excellent work! You\'re a quiz master!';
+            } else if (accuracy >= 60) {
+                elements.resultsMessage.textContent = 'Good job! Keep practicing to improve.';
+            } else {
+                elements.resultsMessage.textContent = 'Nice try! Practice makes perfect.';
+            }
+            
+            // Update user stats
+            appState.userStats.totalPoints += points;
+            appState.userStats.quizzesCompleted++;
+            appState.userStats.currentStreak++;
+            appState.userStats.globalRank = `#${Math.max(1, 100 - Math.floor(appState.userStats.totalPoints / 10))}`;
+            
+            updateUserStats();
+            
+            // Switch to results view
+            switchView('results');
+            
+            // Show notification
+            showNotification(`Quiz completed! You earned ${points} points.`);
+        }
+
+        // Review quiz answers
+        function reviewQuiz() {
+            // For simplicity, we'll just go back to the last question
+            loadQuestion(appState.quiz.questions.length - 1);
+            switchView('quiz');
+        }
+
+        // Update user stats on dashboard and profile
+        function updateUserStats() {
+            elements.totalPoints.textContent = appState.userStats.totalPoints;
+            elements.quizzesCompleted.textContent = appState.userStats.quizzesCompleted;
+            elements.currentStreak.textContent = appState.userStats.currentStreak;
+            elements.globalRank.textContent = appState.userStats.globalRank;
+            
+            if (appState.user) {
+                elements.profileUsername.textContent = appState.user.username;
+                elements.memberSince.textContent = appState.user.memberSince;
+                elements.profileAvatar.textContent = appState.user.username.charAt(0).toUpperCase();
+            }
+            
+            elements.profileQuizzes.textContent = appState.userStats.quizzesCompleted;
+            elements.profilePoints.textContent = appState.userStats.totalPoints;
+            elements.profileAccuracy.textContent = appState.userStats.quizzesCompleted > 0 ? 
+                `${Math.round((appState.userStats.totalPoints / (appState.userStats.quizzesCompleted * 100)) * 100)}%` : '0%';
+        }
+
+        // Load leaderboard data
+        function loadLeaderboard(type) {
+            // Simulate leaderboard data
+            const leaderboardData = [
+                { rank: 1, name: "Quiz Master", score: 2850 },
+                { rank: 2, name: "Brainiac", score: 2740 },
+                { rank: 3, name: "Trivia Whiz", score: 2650 },
+                { rank: 4, name: "Knowledge King", score: 2520 },
+                { rank: 5, name: "Fact Finder", score: 2480 }
+            ];
+            
+            // Clear current list
+            elements.leaderboardList.innerHTML = '';
+            
+            // Add leaderboard items
+            leaderboardData.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.className = 'leaderboard-item';
+                listItem.innerHTML = `
+                    <div class="rank">${item.rank}</div>
+                    <div class="user-info">
+                        <div class="avatar">${item.name.charAt(0)}</div>
+                        <div class="name">${item.name}</div>
+                    </div>
+                    <div class="score">${item.score} pts</div>
+                `;
+                elements.leaderboardList.appendChild(listItem);
+            });
+        }
+
+        // Load profile data
+        function loadProfile() {
+            // This would typically load from a server
+            // For now, we'll just use the current state
+            updateUserStats();
+            
+            // Add some recent activity
+            if (appState.userStats.quizzesCompleted > 0) {
+                elements.recentActivity.innerHTML = `
+                    <p>Completed ${appState.userStats.quizzesCompleted} quiz(es) with an average accuracy of ${Math.round((appState.userStats.totalPoints / (appState.userStats.quizzesCompleted * 100)) * 100)}%</p>
+                    <p>Current streak: ${appState.userStats.currentStreak} days</p>
+                    <p>Total points: ${appState.userStats.totalPoints}</p>
+                `;
+            } else {
+                elements.recentActivity.innerHTML = '<p>No recent activity yet. Complete a quiz to see your progress here!</p>';
+            }
+        }
+
+        // Load categories
+        function loadCategories() {
+            const categories = [
+                { name: 'General Knowledge', icon: 'fa-globe', count: 15 },
+                { name: 'Geography', icon: 'fa-map', count: 12 },
+                { name: 'Science', icon: 'fa-flask', count: 18 },
+                { name: 'History', icon: 'fa-landmark', count: 14 },
+                { name: 'Entertainment', icon: 'fa-film', count: 20 },
+                { name: 'Sports', icon: 'fa-football-ball', count: 10 }
+            ];
+            
+            elements.categoriesList.innerHTML = '';
+            
+            categories.forEach(category => {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category-card';
+                categoryCard.innerHTML = `
+                    <i class="fas ${category.icon}"></i>
+                    <h3>${category.name}</h3>
+                    <p>${category.count} quizzes available</p>
+                `;
+                categoryCard.addEventListener('click', () => {
+                    startQuiz(category.name.toLowerCase().replace(' ', ''));
+                });
+                elements.categoriesList.appendChild(categoryCard);
+            });
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
